@@ -30,9 +30,9 @@ c = db.cursor()    #facilitate db ops
 
 #INSERT YOUR POPULATE CODE IN THIS ZONE / POPULATE INFORMATION
 #=====================================================================================
-command = "CREATE TABLE IF NOT EXISTS STUDENT(NAME TEXT, AGE INTEGER, ID INTEGER)"
+command = "CREATE TABLE STUDENT(NAME TEXT, AGE INTEGER, ID INTEGER)"
 c.execute(command)    #run SQL statement
-command = "CREATE TABLE IF NOT EXISTS COURSES(CODE TEXT, MARK INTEGER, ID INTEGER)"
+command = "CREATE TABLE COURSES(CODE TEXT, MARK INTEGER, ID INTEGER)"
 c.execute(command)    #run SQL statement
 for row in d1:
     name = row['name']
@@ -61,12 +61,25 @@ for bar in foo:
     ACCOUNTS[bar[0]] = bar[1]
 #=====================================================================================
 
+# AVERAGE METHOD
+#=====================================================================================
+def avg(name):
+    ID = ACCOUNTS[name]
+    summ = 0
+    ctr = 0
+    for row in d2:
+        if ID == row['id']:
+            ctr += 1
+            summ += row['mark']
+    return (1.0*summ) / ctr
+#=====================================================================================
+
 ### The Root Route:
 
 @app.route('/')
 def hello():
     if 'user' in session.keys(): # If there is a session...
-        return render_template('grades.html', name = session['user'], ID = session['id'], dict = INFORMATION) # Direct to the logged in page
+        return render_template('grades.html', name = session['user'], ID = session['id'], avg = (avg(name)) ) # Direct to the logged in page
     else: # IF NOT...
         return render_template('login.html') # Log in
 
@@ -86,7 +99,7 @@ def login():
             session['user'] = request.form['user'] # Add user to the session.
             session['id'] = request.form['id']
             print session.keys()
-            return render_template('grades.html', name = session['user'], ID = session['id'], dict = INFORMATION) # Direct to the logged in page
+            return render_template('grades.html', name = session['user'], ID = session['id'], avg = (avg(name)) ) # Direct to the logged in page
         elif aut(request.form['user'], request.form['id']) == 1:
             flash('Wrong USERID')
             return render_template('login.html')
@@ -94,7 +107,7 @@ def login():
             flash('Wrong Username')
             return render_template('login.html')
     else:
-        return render_template('grades.html', name = session['user'], ID = session['id'], dict = INFORMATION) # Direct to the logged in page
+        return render_template('grades.html', name = session['user'], ID = session['id'], dict = INFORMATION, avg = (avg(name)) ) # Direct to the logged in page
 
 ### After logging out:
 

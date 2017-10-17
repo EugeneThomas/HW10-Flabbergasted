@@ -1,0 +1,9 @@
+{% extends "login.html" %}
+{% block title %} WELCOME! {% endblock %}
+{% block header %} Welcome {{name}}! {% endblock %}
+{% block content %}
+Name: {{name}} <br>
+ID: {{ID}} <br>
+Average: {{avg}} <br>
+<button type = "submit" formaciton= "/logout">Logout</button> 
+{% endblock %}
