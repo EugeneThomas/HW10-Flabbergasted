@@ -1,18 +1,18 @@
 # Flabbergasted: Eugene Thomas and Joyce Wu
 # SoftDev1 pd7
 # HW10 -- Average, ... or maybe just Basic
-# 2017-10-17
+# 2017-10-18
 
 #IMPORTING
 #=====================================================================================
 import sqlite3   #enable control of an sqlite database
 import csv       #facilitates CSV I/O
-from flask import Flask, request, render_template, session, redirect, url_for, flash
-import os
+## from flask import Flask, request, render_template, session, redirect, url_for, flash
+## import os
 #=====================================================================================
 
-app = Flask(__name__) #create instance of class
-app.secret_key = os.urandom(32)
+## app = Flask(__name__) #create instance of class
+## app.secret_key = os.urandom(32)
 
 ACCOUNTS = {}
 INFORMATION = {}
@@ -41,14 +41,10 @@ for row in d1:
     command = "INSERT INTO STUDENT VALUES('" + name + "', " + age + ", " + Id + ")"
     c.execute(command) #run SQL statement
 for row in d2:
-    L = []
-    name = row['code']
-    L.append(name)
+    code = row['code']
     mark = row['mark']
-    L.append(mark)
     Id = row['id']
-    INFORMATION[Id] = L
-    command = "INSERT INTO COURSES VALUES('" + name + "', " + mark + ", " + Id + ")"
+    command = "INSERT INTO COURSES VALUES('" + code + "', " + mark + ", " + Id + ")"
     c.execute(command) #run SQL statement
 #=====================================================================================
 
@@ -61,19 +57,51 @@ for bar in foo:
     ACCOUNTS[bar[0]] = bar[1]
 #=====================================================================================
 
+
+# LOOKING UP GRADES
+#=====================================================================================
+def getGrades(name):
+    d = {}
+    ID2 = ACCOUNTS[name]
+    ID  = str(ID2)
+    command = "SELECT CODE, MARK FROM COURSES WHERE COURSES.ID = " + ID + ";"
+    foo = c.execute(command);
+    for bar in foo:
+        d[bar[0]] = bar[1]
+    return d
+#=====================================================================================
+print getGrades('kruder')
+
 # AVERAGE METHOD
 #=====================================================================================
 def avg(name):
-    ID = ACCOUNTS[name]
     summ = 0
     ctr = 0
-    for row in d2:
-        if ID == row['id']:
-            ctr += 1
-            summ += row['mark']
+    d = getGrades(name)
+    for key in d:
+        summ += d[key]
+        ctr += 1
     return (1.0*summ) / ctr
 #=====================================================================================
+print avg('kruder')
 
+
+# NAME, ID, AND AVERAGE:
+
+def name_id_avg():
+    rstr = "\n"
+    for i in ACCOUNTS:
+        rstr += i
+        rstr += ", "
+        rstr += str(ACCOUNTS[i])
+        rstr += ", "
+        rstr += str(avg(i))
+        rstr += "\n"
+    return rstr
+
+print name_id_avg()
+
+'''
 ### The Root Route:
 
 @app.route('/')
@@ -121,3 +149,6 @@ def logout():
 if __name__=="__main__":
     app.debug = True
     app.run()
+'''
+db.commit()
+db.close()  #close database
