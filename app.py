@@ -31,6 +31,7 @@ c = db.cursor()    #facilitate db ops
 #INSERT YOUR POPULATE CODE IN THIS ZONE / POPULATE INFORMATION
 #=====================================================================================
 command = "CREATE TABLE STUDENT(NAME TEXT, AGE INTEGER, ID INTEGER)"
+print command
 c.execute(command)    #run SQL statement
 command = "CREATE TABLE COURSES(CODE TEXT, MARK INTEGER, ID INTEGER)"
 c.execute(command)    #run SQL statement
@@ -49,6 +50,7 @@ for row in d2:
     Id = row['id']
     INFORMATION[Id] = L
     command = "INSERT INTO COURSES VALUES('" + name + "', " + mark + ", " + Id + ")"
+    #print command
     c.execute(command) #run SQL statement
 #=====================================================================================
 
