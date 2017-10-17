@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% block title %} Login! {% endblock %}</title>
+</head>
+<body>
+  <center>
+    <h1>{% block header %} Please Log In Below: {% endblock %}</h1>
+    {% with msgs = get_flashed_messages() %}
+    {% for msg in msgs %}
+    {{msg}}
+    {% endfor %}
+    {% endwith %}
+    {% block content %}
+    <br> <br>
+<form action="/login" method = "POST" >
+<input type ="text" name = "user" placeholder="USERNAME" size="35">
+<input type = "password" name = "id" placeholder="USERID" size="35">
+<input type = "submit" value = "Submit"> <br> <br> 
+</form>
+{% endblock %}
+</center>
+</body>
+</html>
