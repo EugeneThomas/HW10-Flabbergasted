@@ -7,12 +7,7 @@
 #=====================================================================================
 import sqlite3   #enable control of an sqlite database
 import csv       #facilitates CSV I/O
-## from flask import Flask, request, render_template, session, redirect, url_for, flash
-## import os
 #=====================================================================================
-
-## app = Flask(__name__) #create instance of class
-## app.secret_key = os.urandom(32)
 
 ACCOUNTS = {}
 INFORMATION = {}
@@ -45,7 +40,9 @@ for row in d2:
     mark = row['mark']
     Id = row['id']
     command = "INSERT INTO COURSES VALUES('" + code + "', " + mark + ", " + Id + ")"
-    c.execute(command) #run SQL statement
+    foo = c.execute(command) #run SQL statement
+    for bar in foo:
+        print bar
 #=====================================================================================
 
 
@@ -56,7 +53,6 @@ foo = c.execute(command)
 for bar in foo:
     ACCOUNTS[bar[0]] = bar[1]
 #=====================================================================================
-
 
 # LOOKING UP GRADES
 #=====================================================================================
@@ -87,7 +83,7 @@ print avg('kruder')
 
 
 # NAME, ID, AND AVERAGE:
-
+#=====================================================================================
 def name_id_avg():
     rstr = "\n"
     for i in ACCOUNTS:
@@ -98,57 +94,43 @@ def name_id_avg():
         rstr += str(avg(i))
         rstr += "\n"
     return rstr
-
+#=====================================================================================
 print name_id_avg()
 
-'''
-### The Root Route:
 
-@app.route('/')
-def hello():
-    if 'user' in session.keys(): # If there is a session...
-        return render_template('grades.html', name = session['user'], ID = session['id'], avg = (avg(name)) ) # Direct to the logged in page
-    else: # IF NOT...
-        return render_template('login.html') # Log in
+# CREATING THE PEEPS_AVG TABLE
+#=====================================================================================
+def create_table():
+    command = "CREATE TABLE peeps_avg(ID INTEGER, AVG INTEGER)"
+    c.execute(command)
+    for i in ACCOUNTS:
+        command = "INSERT INTO peeps_avg VALUES(" + str(ACCOUNTS[i]) + ", " + str(avg(i)) + ")"
+        c.execute(command)
+#=====================================================================================
+create_table()
+command = "SELECT * FROM peeps_avg"
+foo = c.execute(command)
+for bar in foo:
+    print bar
 
-def aut(u, p):
-    if (u in ACCOUNTS):
-        if p == ACCOUNTS[u]:
-            return 0 #All correct
-        else:
-            return 1 #Wrong Password
-    else:
-        return -1 #Wrong Username
+# Facilitate Changes:
+#=====================================================================================
+def add_row(CODE, MARK, NAME):
+    command = "INSERT INTO COURSES VALUES(" + "'CODE'"  + ", " + str(MARK) + ", " + str(ACCOUNTS[NAME]) + ")"
+    c.execute(command) #run SQL statement
+    return NAME + " received a " + str(MARK) + " in " + CODE + "."
+def update_average(NAME):
+    command = "UPDATE peeps_avg SET AVG" + "= " + str(avg(NAME)) + " WHERE " + str(ACCOUNTS[NAME]) + " = ID;"
+    c.execute(command)
+    return NAME + "'s New Average is: " + str(avg(NAME)) + "."
+#=====================================================================================
+print add_row('systems', 99, 'kruder')
+print update_average('kruder')
+command = "SELECT * FROM peeps_avg"
+foo = c.execute(command)
+for bar in foo:
+    print bar
 
-@app.route('/login', methods=["GET", "POST"])
-def login():
-    if 'user' not in session:
-        if aut(request.form['user'], request.form['id']) == 0:
-            session['user'] = request.form['user'] # Add user to the session.
-            session['id'] = request.form['id']
-            print session.keys()
-            return render_template('grades.html', name = session['user'], ID = session['id'], avg = (avg(name)) ) # Direct to the logged in page
-        elif aut(request.form['user'], request.form['id']) == 1:
-            flash('Wrong USERID')
-            return render_template('login.html')
-        else:
-            flash('Wrong Username')
-            return render_template('login.html')
-    else:
-        return render_template('grades.html', name = session['user'], ID = session['id'], dict = INFORMATION, avg = (avg(name)) ) # Direct to the logged in page
 
-### After logging out:
-
-@app.route('/logout')
-def logout():
-    if 'user' in session.keys():
-        session.pop('user',None) ## Remove user from the session
-    flash('Logged Out')
-    return redirect("/")
-
-if __name__=="__main__":
-    app.debug = True
-    app.run()
-'''
 db.commit()
 db.close()  #close database
