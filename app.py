@@ -116,8 +116,9 @@ for bar in foo:
 # Facilitate Changes:
 #=====================================================================================
 def add_row(CODE, MARK, NAME):
-    command = "INSERT INTO COURSES VALUES(" + "'CODE'"  + ", " + str(MARK) + ", " + str(ACCOUNTS[NAME]) + ")"
+    command = "INSERT INTO COURSES VALUES(" + str(CODE) + ", " + str(MARK) + ", " + str(ACCOUNTS[NAME]) + ")"
     c.execute(command) #run SQL statement
+    print update_average(NAME)
     return NAME + " received a " + str(MARK) + " in " + CODE + "."
 def update_average(NAME):
     command = "UPDATE peeps_avg SET AVG" + "= " + str(avg(NAME)) + " WHERE " + str(ACCOUNTS[NAME]) + " = ID;"
@@ -125,11 +126,35 @@ def update_average(NAME):
     return NAME + "'s New Average is: " + str(avg(NAME)) + "."
 #=====================================================================================
 print add_row('systems', 99, 'kruder')
-print update_average('kruder')
-command = "SELECT * FROM peeps_avg"
+print add_row('systems', 99, 'kruder')
+print add_row('systems', 99, 'kruder')
+command = "SELECT * FROM COURSES;"
 foo = c.execute(command)
 for bar in foo:
     print bar
+
+print "\n\n\n\n"
+cont = True
+while cont == True:
+    num = int(raw_input("Press 1 to add a class. Press 2 to Leave.\n"))
+    if num == 1:
+        sure = 0
+        while sure != 1:
+            course = raw_input("Please insert a course name. For sake of syntax, keep all words lowercase.\n")
+            sure = int(raw_input("Are you sure about " + "'" + course + "'? Click 1 for yes. Type any other character for no.\n"))
+        sure = 0
+        while sure != 1:
+            mark = int(raw_input("Please insert a grade. Please make it an integer.\n"))
+            sure = int(raw_input("Are you sure about " + "'" + course + "'? Click 1 for yes. Type any other character for no.\n"))
+        sure = 0
+        while sure != 1:
+            name = raw_input("For which student are you doing this? Please insert their name, with correct capitalization.\n")
+            sure = int(raw_input("Are you sure about " + "'" + course + "'? Click 1 for yes. Type any other character for no.\n"))
+            print add_row(course, mark, name)
+            print update_average(name)
+    elif num == 2:
+        cont = False;
+
 
 
 db.commit()
