@@ -66,7 +66,7 @@ def getGrades(name):
         d[bar[0]] = bar[1]
     return d
 #=====================================================================================
-print getGrades('kruder')
+#print getGrades('kruder')
 
 # AVERAGE METHOD
 #=====================================================================================
@@ -79,7 +79,7 @@ def avg(name):
         ctr += 1
     return (1.0*summ) / ctr
 #=====================================================================================
-print avg('kruder')
+#print avg('kruder')
 
 
 # NAME, ID, AND AVERAGE:
@@ -95,7 +95,7 @@ def name_id_avg():
         rstr += "\n"
     return rstr
 #=====================================================================================
-print name_id_avg()
+#print name_id_avg()
 
 
 # CREATING THE PEEPS_AVG TABLE
@@ -110,28 +110,29 @@ def create_table():
 create_table()
 command = "SELECT * FROM peeps_avg"
 foo = c.execute(command)
-for bar in foo:
-    print bar
+#for bar in foo:
+#    print bar
 
 # Facilitate Changes:
 #=====================================================================================
 def add_row(CODE, MARK, NAME):
-    command = "INSERT INTO COURSES VALUES(" + str(CODE) + ", " + str(MARK) + ", " + str(ACCOUNTS[NAME]) + ")"
+    command = 'INSERT INTO COURSES VALUES("' + str(CODE) + '", ' + str(MARK) + ", " + str(ACCOUNTS[NAME]) + ")"
     c.execute(command) #run SQL statement
-    print update_average(NAME)
+    #print update_average(NAME)
     return NAME + " received a " + str(MARK) + " in " + CODE + "."
 def update_average(NAME):
     command = "UPDATE peeps_avg SET AVG" + "= " + str(avg(NAME)) + " WHERE " + str(ACCOUNTS[NAME]) + " = ID;"
     c.execute(command)
     return NAME + "'s New Average is: " + str(avg(NAME)) + "."
 #=====================================================================================
-print add_row('systems', 99, 'kruder')
-print add_row('systems', 99, 'kruder')
-print add_row('systems', 99, 'kruder')
-command = "SELECT * FROM COURSES;"
-foo = c.execute(command)
-for bar in foo:
-    print bar
+
+#print add_row('systems', 99, 'kruder')
+#print add_row('systems', 99, 'kruder')
+#print add_row('systems', 99, 'kruder')
+#command = "SELECT * FROM COURSES;"
+#foo = c.execute(command)
+#for bar in foo:
+#    print bar
 
 print "\n\n\n\n"
 cont = True
@@ -145,12 +146,12 @@ while cont == True:
         sure = 0
         while sure != 1:
             mark = int(raw_input("Please insert a grade. Please make it an integer.\n"))
-            sure = int(raw_input("Are you sure about " + "'" + course + "'? Click 1 for yes. Type any other character for no.\n"))
+            sure = int(raw_input("Are you sure about " + "'" + str(mark) + "'? Click 1 for yes. Type any other character for no.\n"))
         sure = 0
         while sure != 1:
             name = raw_input("For which student are you doing this? Please insert their name, with correct capitalization.\n")
-            sure = int(raw_input("Are you sure about " + "'" + course + "'? Click 1 for yes. Type any other character for no.\n"))
-            print add_row(course, mark, name)
+            sure = int(raw_input("Are you sure about " + "'" + name + "'? Click 1 for yes. Type any other character for no.\n"))
+            #print add_row(course, mark, name)
             print update_average(name)
     elif num == 2:
         cont = False;
